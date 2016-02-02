@@ -236,8 +236,8 @@ function(vrm_cmake_add_public_header_test header)
     if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/header/${header}.cpp")
     #{
         file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/header/${header}.cpp" "
-            #include <${header}>
-            int main() { return 0; }
+#include <${header}>
+int __attribute__((const)) main() { return 0; }
         ")
     #}
     endif()
