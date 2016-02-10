@@ -250,7 +250,7 @@ int __attribute__((const)) main() { return 0; }
 
     add_dependencies(tests test.header.${_target})
 
-    # Append generated targets    
+    # Append generated targets
     list(APPEND vrm_cmake_out ${_target})
 #}
 endfunction()
@@ -289,7 +289,7 @@ macro(vrm_cmake_generate_unit_tests test_srcs)
         vrm_cmake_add_unit_test(${_target} ${CMAKE_CURRENT_BINARY_DIR}/${_target})
         # target_link_libraries(${_target} linked_libraries)
 
-        # Append generated targets        
+        # Append generated targets
         list(APPEND vrm_cmake_out ${_target})
     #}
     endforeach()
@@ -411,7 +411,7 @@ macro(vrm_cmake_add_common_compiler_flags_release)
     vrm_cmake_add_compiler_flag("-Ofast")
     vrm_cmake_add_compiler_flag("-ffast-math")
 
-    add_definitions(-DNDEBUG -DSSVUT_DISABLE -DSSVU_ASSERT_FORCE_OFF=1)
+    add_definitions(-DNDEBUG -DSSVU_ASSERT_FORCE_OFF=1)
 #}
 endmacro()
 
@@ -460,12 +460,12 @@ macro(vrm_cmake_find_extlib_in extlib dir)
 #{
     vrm_cmake_message("finding ${extlib}")
 
-    list(APPEND CMAKE_MODULE_PATH 
+    list(APPEND CMAKE_MODULE_PATH
         "${CMAKE_SOURCE_DIR}/${dir}/${extlib}/cmake/modules/"
         "${CMAKE_SOURCE_DIR}/${dir}/${extlib}/cmake/"
         "${CMAKE_SOURCE_DIR}/extlibs/${extlib}/cmake/modules/"
         "${CMAKE_SOURCE_DIR}/extlibs/${extlib}/cmake/")
-    
+
     find_package("${extlib}" REQUIRED)
     string(TOUPPER "${extlib}" ${extlib}_UPPER)
     include_directories("${${${extlib}_UPPER}_INCLUDE_DIR}")

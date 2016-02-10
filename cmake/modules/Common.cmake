@@ -89,7 +89,7 @@ macro(SSVCMake_setDefaultFlags)
     if("${CMAKE_BUILD_TYPE}" STREQUAL "WIP")
     #{
         message("SSVCMake: WIP (no optimization, no tests)")
-        SSVCMake_setForceCache(CMAKE_CXX_FLAGS "${SSVCMAKE_COMMON_FLAGS} -O0 -DSSVUT_DISABLE")
+        SSVCMake_setForceCache(CMAKE_CXX_FLAGS "${SSVCMAKE_COMMON_FLAGS} -O0")
     #}
     elseif("${CMAKE_BUILD_TYPE}" STREQUAL "WIP_OPT")
     #{
@@ -104,7 +104,7 @@ macro(SSVCMake_setDefaultFlags)
     elseif("${CMAKE_BUILD_TYPE}" STREQUAL "FINAL_RELEASE")
     #{
         message("SSVCMake: final release (release, no tests)")
-        SSVCMake_setForceCache(CMAKE_CXX_FLAGS "${SSVCMAKE_COMMON_FLAGS} -DNDEBUG -Ofast -ffast-math -DSSVUT_DISABLE -DSSVU_ASSERT_FORCE_OFF=1")
+        SSVCMake_setForceCache(CMAKE_CXX_FLAGS "${SSVCMAKE_COMMON_FLAGS} -DNDEBUG -Ofast -ffast-math -DSSVU_ASSERT_FORCE_OFF=1")
     #}
     else()
     #{
@@ -157,13 +157,6 @@ macro(SSVCMake_setDefaultFlags)
     #}
     endif()
 
-    if("${SSVCMAKE_NOTESTS}")
-    #{
-        message("SSVCMake: disable tests")
-        SSVCMake_setForceCache(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSSVUT_DISABLE")
-    #}
-    endif()
-
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SSVCMAKE_EXTRA_FLAGS}")
 
     if("${SSVCMAKE_PROFILE_COMPILATION}")
@@ -190,13 +183,13 @@ macro(SSVCMake_findExtlibIn mExtlib mPath)
 #{
     message("SSVCMake: finding ${mExtlib}")
 
-    list(APPEND CMAKE_MODULE_PATH 
+    list(APPEND CMAKE_MODULE_PATH
         "${CMAKE_SOURCE_DIR}/${mPath}/${mExtlib}/cmake/modules/"
         "${CMAKE_SOURCE_DIR}/${mPath}/${mExtlib}/cmake/"
         "${CMAKE_SOURCE_DIR}/extlibs/${mExtlib}/cmake/modules/"
         "${CMAKE_SOURCE_DIR}/extlibs/${mExtlib}/cmake/"
         "${CMAKE_MODULE_PATH}")
-    
+
     find_package("${mExtlib}" REQUIRED)
     string(TOUPPER "${mExtlib}" ${mExtlib}_UPPER)
     include_directories("${${${mExtlib}_UPPER}_INCLUDE_DIR}")
