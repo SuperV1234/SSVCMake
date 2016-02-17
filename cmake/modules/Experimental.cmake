@@ -375,6 +375,10 @@ macro(vrm_cmake_add_common_compiler_flags_safety)
     vrm_cmake_add_compiler_flag("-Wsuggest-attribute=noreturn")
     vrm_cmake_add_compiler_flag("-Wsuggest-attribute=format")
     vrm_cmake_add_compiler_flag("-Wsequence-point")
+    vrm_cmake_add_compiler_flag("-Wlogical-op")
+    vrm_cmake_add_compiler_flag("-Wduplicated-cond")
+    vrm_cmake_add_compiler_flag("-Wtautological-compare")
+    vrm_cmake_add_compiler_flag("-Wnull-dereference")
     # vrm_cmake_add_compiler_flag("-Winline")
 
     # Disable warnings
