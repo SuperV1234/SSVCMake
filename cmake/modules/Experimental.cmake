@@ -251,7 +251,8 @@ int __attribute__((const)) main() { return 0; }
     add_dependencies(tests test.header.${_target})
 
     # Append generated targets
-    list(APPEND vrm_cmake_out test.header.${_target})
+    vrm_cmake_message("Added test.header.${_target}")
+    list(APPEND vrm_cmake_out "test.header.${_target}")
 #}
 endfunction()
 
@@ -260,7 +261,7 @@ macro(vrm_cmake_generate_public_header_tests header_list inc_dir)
 #{
     vrm_cmake_message("generating public header tests")
 
-    # Clear result list\
+    # Clear result list.
     set(vrm_cmake_out "")
 
     foreach(_header IN LISTS ${header_list})
@@ -277,7 +278,7 @@ macro(vrm_cmake_generate_unit_tests test_srcs)
 #{
     vrm_cmake_message("generating unit tests")
 
-    # Clear results list.
+    # Clear result list.
     set(vrm_cmake_out "")
 
     foreach(_file IN LISTS ${test_srcs})
