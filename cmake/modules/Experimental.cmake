@@ -472,6 +472,13 @@ macro(vrm_cmake_find_extlib_in extlib dir)
 
     find_package("${extlib}" REQUIRED)
     string(TOUPPER "${extlib}" ${extlib}_UPPER)
+#}
+endmacro()
+
+# TODO:
+macro(vrm_cmake_find_extlib_in_and_default_include extlib dir)
+#{
+    vrm_cmake_find_extlib_in(${extlib} ${dir})
     include_directories("${${${extlib}_UPPER}_INCLUDE_DIR}")
 #}
 endmacro()
@@ -480,7 +487,7 @@ endmacro()
 macro(vrm_cmake_find_extlib extlib)
 #{
     vrm_cmake_message("finding ${extlib} in ./..")
-    vrm_cmake_find_extlib_in(${extlib} "..")
+    vrm_cmake_find_extlib_in_and_default_include(${extlib} "..")
 #}
 endmacro()
 
