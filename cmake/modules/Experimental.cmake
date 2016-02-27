@@ -251,7 +251,7 @@ int __attribute__((const)) main() { return 0; }
     add_dependencies(tests test.header.${_target})
 
     # Append generated targets
-    list(APPEND vrm_cmake_out ${_target})
+    list(APPEND vrm_cmake_out test.header.${_target})
 #}
 endfunction()
 
