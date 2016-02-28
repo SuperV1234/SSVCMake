@@ -229,7 +229,7 @@ endfunction()
 
 # Adds a test for a public header, making sure including it works properly.
 # Adds them to the `tests` target.
-function(vrm_cmake_add_public_header_test header)
+macro(vrm_cmake_add_public_header_test header)
 #{
     string(REGEX REPLACE "/" "." _target "${header}")
 
@@ -251,10 +251,9 @@ int __attribute__((const)) main() { return 0; }
     add_dependencies(tests test.header.${_target})
 
     # Append generated targets
-    vrm_cmake_message("Added test.header.${_target}")
     list(APPEND vrm_cmake_out "test.header.${_target}")
 #}
-endfunction()
+endmacro()
 
 # Generate tests that include each public header.
 macro(vrm_cmake_generate_public_header_tests header_list inc_dir)
