@@ -347,8 +347,8 @@ macro(vrm_cmake_add_common_compiler_flags_safety)
     vrm_cmake_message("added common safety flags")
 
     # Enable common flags
-    vrm_cmake_add_compiler_flag("-pedantic")
     vrm_cmake_add_compiler_flag("-std=c++14")
+    vrm_cmake_add_compiler_flag("-pedantic")
 
     # Enable warnings
     vrm_cmake_add_compiler_flag("-W")
@@ -356,7 +356,11 @@ macro(vrm_cmake_add_common_compiler_flags_safety)
     vrm_cmake_add_compiler_flag("-Wextra")
     vrm_cmake_add_compiler_flag("-Wno-unused-local-typedefs")
     vrm_cmake_add_compiler_flag("-Wwrite-strings")
-    vrm_cmake_add_compiler_flag("-Wshadow")
+
+    # TODO:
+    # vrm_cmake_add_compiler_flag("-Wshadow")
+    # vrm_cmake_add_compiler_flag("-Winline")
+
     vrm_cmake_add_compiler_flag("-Wundef")
     vrm_cmake_add_compiler_flag("-Wno-missing-field-initializers")
     vrm_cmake_add_compiler_flag("-Wpointer-arith")
@@ -370,16 +374,12 @@ macro(vrm_cmake_add_common_compiler_flags_safety)
     vrm_cmake_add_compiler_flag("-Wsuggest-final-types")
     vrm_cmake_add_compiler_flag("-Wsuggest-final-methods")
     vrm_cmake_add_compiler_flag("-Wsuggest-override")
-    vrm_cmake_add_compiler_flag("-Wsuggest-attribute=pure")
-    vrm_cmake_add_compiler_flag("-Wsuggest-attribute=const")
-    vrm_cmake_add_compiler_flag("-Wsuggest-attribute=noreturn")
-    vrm_cmake_add_compiler_flag("-Wsuggest-attribute=format")
+
     vrm_cmake_add_compiler_flag("-Wsequence-point")
     vrm_cmake_add_compiler_flag("-Wlogical-op")
     vrm_cmake_add_compiler_flag("-Wduplicated-cond")
     vrm_cmake_add_compiler_flag("-Wtautological-compare")
     vrm_cmake_add_compiler_flag("-Wnull-dereference")
-    # vrm_cmake_add_compiler_flag("-Winline")
 
     # Disable warnings
     vrm_cmake_add_compiler_flag("-Wno-c++98-compat")
@@ -407,6 +407,18 @@ macro(vrm_cmake_add_common_compiler_flags_safety)
 #}
 endmacro()
 
+# TODO:
+macro(vrm_cmake_add_common_compiler_flags_suggest_attribute)
+#{
+    vrm_cmake_message("added common suggest-attribute flags")
+
+     vrm_cmake_add_compiler_flag("-Wsuggest-attribute=pure")
+     vrm_cmake_add_compiler_flag("-Wsuggest-attribute=const")
+     vrm_cmake_add_compiler_flag("-Wsuggest-attribute=noreturn")
+     vrm_cmake_add_compiler_flag("-Wsuggest-attribute=format")
+#}
+endmacro()
+
 # Adds common compiler release flags/definitions to the project.
 macro(vrm_cmake_add_common_compiler_flags_release)
 #{
@@ -424,8 +436,11 @@ macro(vrm_cmake_add_common_compiler_flags_debug)
 #{
     vrm_cmake_message("added common debug flags")
 
-    vrm_cmake_add_compiler_flag("-fno-omit-frame-pointer")
-    vrm_cmake_add_compiler_flag("-g3")
+    # TODO:
+    # vrm_cmake_add_compiler_flag("-fno-omit-frame-pointer")
+
+    vrm_cmake_add_compiler_flag("-Og")
+    vrm_cmake_add_compiler_flag("-g")
 #}
 endmacro()
 
