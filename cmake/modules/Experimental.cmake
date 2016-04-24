@@ -427,7 +427,18 @@ macro(vrm_cmake_add_common_compiler_flags_release)
     vrm_cmake_add_compiler_flag("-Ofast")
     vrm_cmake_add_compiler_flag("-ffast-math")
 
-    add_definitions(-DNDEBUG -DSSVU_ASSERT_FORCE_OFF=1)
+    add_definitions(-DNDEBUG -DSSVU_ASSERT_FORCE_OFF=1 -DVRM_CORE_ASSERT_FORCE_OFF=1)
+#}
+endmacro()
+
+# Adds common compiler WIP_OPT flags/definitions to the project.
+macro(vrm_cmake_add_common_compiler_flags_wip_opt)
+#{
+    vrm_cmake_message("added common WIP_OPT flags")
+
+    vrm_cmake_add_compiler_flag("-O2")
+
+    add_definitions(-DNDEBUG -DSSVU_ASSERT_FORCE_OFF=1 -DVRM_CORE_ASSERT_FORCE_OFF=1)
 #}
 endmacro()
 
@@ -459,9 +470,18 @@ macro(vrm_cmake_add_common_compiler_flags)
         vrm_cmake_message("DEBUG mode")
         vrm_cmake_add_common_compiler_flags_debug()
     #}
-    else()
+    elseif("${CMAKE_BUILD_TYPE}" STREQUAL "WIP")
     #{
         vrm_cmake_message("WIP mode")
+    #}
+    elseif("${CMAKE_BUILD_TYPE}" STREQUAL "WIP_OPT")
+    #{
+        vrm_cmake_message("WIP (optimized) mode")
+        vrm_cmake_add_common_compiler_flags_wip_opt()
+    #}
+    else()
+    #{
+        vrm_cmake_message("Unknown build mode")
     #}
     endif()
 #}
