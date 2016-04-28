@@ -380,6 +380,8 @@ macro(vrm_cmake_add_common_compiler_flags_safety)
     vrm_cmake_add_compiler_flag("-Wduplicated-cond")
     vrm_cmake_add_compiler_flag("-Wtautological-compare")
     vrm_cmake_add_compiler_flag("-Wnull-dereference")
+    vrm_cmake_add_compiler_flag("-Wshift-negative-value")
+    vrm_cmake_add_compiler_flag("-Wshift-overflow=2")
 
     # Disable warnings
     vrm_cmake_add_compiler_flag("-Wno-c++98-compat")
