@@ -84,7 +84,7 @@ macro(SSVCMake_setDefaultFlags)
 #{
     message("SSVCMake: setting default flags")
 
-    set(SSVCMAKE_COMMON_FLAGS "-std=c++1y -pthread -Wall -Wextra -Wpedantic -Wundef -Wshadow -Wno-missing-field-initializers -Wpointer-arith -Wcast-align -Wwrite-strings -Wno-unreachable-code -Wnon-virtual-dtor -Woverloaded-virtual")
+    set(SSVCMAKE_COMMON_FLAGS "-std=c++1y -Wall -Wextra -Wpedantic -Wundef -Wshadow -Wno-missing-field-initializers -Wpointer-arith -Wcast-align -Wwrite-strings -Wno-unreachable-code -Wnon-virtual-dtor -Woverloaded-virtual")
 
     if("${CMAKE_BUILD_TYPE}" STREQUAL "WIP")
     #{

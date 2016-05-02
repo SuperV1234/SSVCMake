@@ -444,6 +444,18 @@ macro(vrm_cmake_add_common_compiler_flags_wip_opt)
 #}
 endmacro()
 
+# Adds common compiler WIP_PROFILE flags/definitions to the project.
+macro(vrm_cmake_add_common_compiler_flags_wip_profile)
+#{
+    vrm_cmake_message("added common WIP_OPT flags")
+
+    vrm_cmake_add_compiler_flag("-O2")
+    vrm_cmake_add_compiler_flag("-g")
+
+    add_definitions(-DNDEBUG -DSSVU_ASSERT_FORCE_OFF=1 -DVRM_CORE_ASSERT_FORCE_OFF=1)
+#}
+endmacro()
+
 # Adds common compiler debug flags/definitions to the project.
 macro(vrm_cmake_add_common_compiler_flags_debug)
 #{
@@ -480,6 +492,11 @@ macro(vrm_cmake_add_common_compiler_flags)
     #{
         vrm_cmake_message("WIP (optimized) mode")
         vrm_cmake_add_common_compiler_flags_wip_opt()
+    #}
+    elseif("${CMAKE_BUILD_TYPE}" STREQUAL "WIP_PROFILE")
+    #{
+        vrm_cmake_message("WIP (profile) mode")
+        vrm_cmake_add_common_compiler_flags_wip_profile()
     #}
     else()
     #{
