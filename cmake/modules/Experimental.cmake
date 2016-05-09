@@ -546,3 +546,25 @@ macro(vrm_cmake_find_extlib extlib)
 endmacro()
 
 # TODO: add sanitization options
+
+# TODO:
+macro(vrm_cmake_set_cxx_standard target_name std_version)
+#{
+	set_property(TARGET target_name PROPERTY CXX_STANDARD std_version)
+	set_property(TARGET target_name PROPERTY CXX_STANDARD_REQUIRED ON)
+#}
+endmacro()
+
+# TODO:
+macro(vrm_cmake_set_cxx_standard_11 target_name)
+#{
+	vrm_cmake_set_cxx_standard(target_name 11)
+#}
+endmacro()
+
+# TODO:
+macro(vrm_cmake_set_cxx_standard_14 target_name)
+#{
+	vrm_cmake_set_cxx_standard(target_name 14)
+#}
+endmacro()
