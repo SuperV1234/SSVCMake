@@ -18,7 +18,6 @@ macro(vrm_check_target)
 #}
 endmacro()
 
-
 # Creates a test called `name` which runs the given `command` with the given arguments.
 # Uses Valgrind if memcheck is enabled.
 function(vrm_cmake_add_test name)
