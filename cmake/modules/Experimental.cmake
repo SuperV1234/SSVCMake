@@ -4,6 +4,8 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
+include(Experimental_Testing)
+
 # Message with vrm_cmake prefix.
 macro(vrm_cmake_message str)
 #{
@@ -75,6 +77,13 @@ macro(vrm_cmake_init_compiler_flag_check)
 #}
 endmacro()
 
+# Assumes `flag` is a valid compiler flag, and enables it.
+macro(vrm_cmake_add_compiler_flag_nocheck flag)
+#{
+    add_compile_options(${flag})
+#}
+endmacro()
+
 # Creates `testname` variable that checks for compiler flag `flag`.
 # The flag is enabled, if possible.
 macro(vrm_cmake_add_compiler_flag flag)
@@ -93,7 +102,7 @@ macro(vrm_cmake_add_compiler_flag flag)
 
     if(${PROJECT_TESTNAME})
     #{
-        add_compile_options(${flag})
+        vrm_cmake_add_compiler_flag_nocheck(${flag})
     #}
     endif()
 #}
@@ -124,19 +133,6 @@ macro(vrm_cmake_header_only_install_glob src_dir dest_dir)
 
     # Create header-only install target.
     vrm_cmake_header_only_install("${INSTALL_FILES_LIST}" "${src_dir}" "${dest_dir}")
-#}
-endmacro()
-
-# Creates a `check` target, intended for tests and examples.
-# Uses CTest.
-macro(vrm_check_target)
-#{
-    vrm_cmake_message("created check target")
-
-    add_custom_target(check
-        COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Build and then run all the tests.")
 #}
 endmacro()
 
@@ -203,126 +199,6 @@ macro(vrm_cmake_add_option_werror)
 #}
 endmacro()
 
-# Creates a test called `name` which runs the given `command` with the given arguments.
-# Uses Valgrind if memcheck is enabled.
-function(vrm_cmake_add_test name)
-#{
-    if("${${PROJECT_NAME_UPPER}_ENABLE_MEMCHECK}")
-    #{
-        add_test(${name} ${Valgrind_EXECUTABLE} --leak-check=full --error-exitcode=1 ${ARGN})
-    #}
-    else()
-    #{
-        add_test(${name} ${ARGN})
-    #}
-    endif()
-#}
-endfunction()
-
-# Adds a test, also as part of the `tests` target.
-function(vrm_cmake_add_unit_test name)
-#{
-    vrm_cmake_add_test(${ARGV})
-    add_dependencies(tests ${name})
-#}
-endfunction()
-
-# Adds a test for a public header, making sure including it works properly.
-# Adds them to the `tests` target.
-macro(vrm_cmake_add_public_header_test header)
-#{
-    string(REGEX REPLACE "/" "." _target "${header}")
-
-    if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/header/${header}.cpp")
-    #{
-        file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/header/${header}.cpp" "
-#include <${header}>
-int __attribute__((const)) main() { return 0; }
-        ")
-    #}
-    endif()
-
-    add_executable(test.header.${_target} EXCLUDE_FROM_ALL
-                        "${CMAKE_CURRENT_BINARY_DIR}/header/${header}.cpp")
-
-    vrm_cmake_add_test(test.header.${_target}
-                            ${CMAKE_CURRENT_BINARY_DIR}/test.header.${_target})
-
-    add_dependencies(tests test.header.${_target})
-
-    # Append generated targets
-    list(APPEND vrm_cmake_out "test.header.${_target}")
-#}
-endmacro()
-
-# Generate tests that include each public header.
-macro(vrm_cmake_generate_public_header_tests header_list inc_dir)
-#{
-    vrm_cmake_message("generating public header tests")
-
-    # Clear result list.
-    set(vrm_cmake_out "")
-
-    foreach(_header IN LISTS ${header_list})
-    #{
-        file(RELATIVE_PATH _relative "${inc_dir}" "${_header}")
-        vrm_cmake_add_public_header_test("${_relative}")
-    #}
-    endforeach()
-#}
-endmacro()
-
-# Generate unit tests.
-macro(vrm_cmake_generate_unit_tests test_srcs)
-#{
-    vrm_cmake_message("generating unit tests")
-
-    # Clear result list.
-    set(vrm_cmake_out "")
-
-    foreach(_file IN LISTS ${test_srcs})
-    #{
-        file(READ "${_file}" _contents)
-        vrm_cmake_target_name_for(_target "${_file}")
-
-        add_executable(${_target} EXCLUDE_FROM_ALL "${_file}")
-        vrm_cmake_add_unit_test(${_target} ${CMAKE_CURRENT_BINARY_DIR}/${_target})
-        # target_link_libraries(${_target} linked_libraries)
-
-        # Append generated targets
-        list(APPEND vrm_cmake_out ${_target})
-    #}
-    endforeach()
-#}
-endmacro()
-
-# Generate unit tests.
-macro(vrm_cmake_generate_unit_tests_glob glob_pattern)
-#{
-    vrm_cmake_message("globbing unit tests")
-
-    # Glob all tests.
-    file(GLOB_RECURSE _srcs ${glob_pattern})
-
-    # Add all the unit tests.
-    vrm_cmake_generate_unit_tests(_srcs)
-#}
-endmacro()
-
-# Generate unit tests.
-macro(vrm_cmake_generate_public_header_tests_glob glob_pattern inc_dir)
-#{
-    vrm_cmake_message("globbing public headers")
-
-    # Glob all public headers. (Detail headers can be removed here.)
-    file(GLOB_RECURSE _pub_headers "${inc_dir}/${glob_pattern}")
-    vrm_cmake_list_remove_glob(_pub_headers GLOB_RECURSE "dummy")
-
-    # Generate tests that include each public header.
-    vrm_cmake_generate_public_header_tests(_pub_headers "${inc_dir}")
-#}
-endmacro()
-
 # TODO
 macro(vrm_cmake_add_compiler_flag_pthread)
 #{
@@ -347,19 +223,16 @@ macro(vrm_cmake_add_common_compiler_flags_safety)
     vrm_cmake_message("added common safety flags")
 
     # Enable common flags
-    vrm_cmake_add_compiler_flag("-std=c++14")
-    vrm_cmake_add_compiler_flag("-pedantic")
+    # TODO: remove?
+    vrm_cmake_add_compiler_flag_nocheck("-std=c++14")
+    vrm_cmake_add_compiler_flag_nocheck("-pedantic")
 
     # Enable warnings
-    vrm_cmake_add_compiler_flag("-W")
-    vrm_cmake_add_compiler_flag("-Wall")
-    vrm_cmake_add_compiler_flag("-Wextra")
+    vrm_cmake_add_compiler_flag_nocheck("-W")
+    vrm_cmake_add_compiler_flag_nocheck("-Wall")
+    vrm_cmake_add_compiler_flag_nocheck("-Wextra")
     vrm_cmake_add_compiler_flag("-Wno-unused-local-typedefs")
     vrm_cmake_add_compiler_flag("-Wwrite-strings")
-
-    # TODO:
-    # vrm_cmake_add_compiler_flag("-Wshadow")
-    # vrm_cmake_add_compiler_flag("-Winline")
 
     vrm_cmake_add_compiler_flag("-Wundef")
     vrm_cmake_add_compiler_flag("-Wno-missing-field-initializers")
@@ -414,10 +287,10 @@ macro(vrm_cmake_add_common_compiler_flags_suggest_attribute)
 #{
     vrm_cmake_message("added common suggest-attribute flags")
 
-     vrm_cmake_add_compiler_flag("-Wsuggest-attribute=pure")
-     vrm_cmake_add_compiler_flag("-Wsuggest-attribute=const")
-     vrm_cmake_add_compiler_flag("-Wsuggest-attribute=noreturn")
-     vrm_cmake_add_compiler_flag("-Wsuggest-attribute=format")
+    vrm_cmake_add_compiler_flag("-Wsuggest-attribute=pure")
+    vrm_cmake_add_compiler_flag("-Wsuggest-attribute=const")
+    vrm_cmake_add_compiler_flag("-Wsuggest-attribute=noreturn")
+    vrm_cmake_add_compiler_flag("-Wsuggest-attribute=format")
 #}
 endmacro()
 
@@ -550,21 +423,21 @@ endmacro()
 # TODO:
 macro(vrm_cmake_set_cxx_standard target_name std_version)
 #{
-	set_property(TARGET ${target_name} PROPERTY CXX_STANDARD ${std_version})
-	set_property(TARGET ${target_name} PROPERTY CXX_STANDARD_REQUIRED ON)
+    set_property(TARGET ${target_name} PROPERTY CXX_STANDARD ${std_version})
+    set_property(TARGET ${target_name} PROPERTY CXX_STANDARD_REQUIRED ON)
 #}
 endmacro()
 
 # TODO:
 macro(vrm_cmake_set_cxx_standard_11 target_name)
 #{
-	vrm_cmake_set_cxx_standard(${target_name} 11)
+    vrm_cmake_set_cxx_standard(${target_name} 11)
 #}
 endmacro()
 
 # TODO:
 macro(vrm_cmake_set_cxx_standard_14 target_name)
 #{
-	vrm_cmake_set_cxx_standard(${target_name} 14)
+    vrm_cmake_set_cxx_standard(${target_name} 14)
 #}
 endmacro()
