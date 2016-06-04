@@ -29,12 +29,25 @@ macro(vrm_cmake_init_project_source_dir)
 #}
 endmacro()
 
+# TODO
+macro(vrm_cmake_set_cxxstd x)
+#{
+    vrm_cmake_message("setting C++ standard")
+
+    set(CMAKE_CXX_STANDARD "${x}")
+    set(CMAKE_CXX_STANDARD_REQUIRED on)
+#}
+endmacro()
+
 # Initializes common data for a C++ CMake project.
 # * Project name and uppercase project name.
 # * Appends common module paths.
 # * Enables testing.
+# * Sets C++ standard to C++14.
 macro(vrm_cmake_init_project project_name)
 #{
+    vrm_cmake_set_cxxstd(14)
+
     project(${project_name} CXX)
     enable_testing()
 
@@ -223,8 +236,6 @@ macro(vrm_cmake_add_common_compiler_flags_safety)
     vrm_cmake_message("added common safety flags")
 
     # Enable common flags
-    # TODO: remove?
-    vrm_cmake_add_compiler_flag_nocheck("-std=c++14")
     vrm_cmake_add_compiler_flag_nocheck("-pedantic")
 
     # Enable warnings
@@ -279,6 +290,7 @@ macro(vrm_cmake_add_common_compiler_flags_safety)
     vrm_cmake_add_compiler_flag("-Wno-range-loop-analysis")
     vrm_cmake_add_compiler_flag("-Wno-unused-member-function")
     vrm_cmake_add_compiler_flag("-Wno-switch-enum")
+    vrm_cmake_add_compiler_flag("-Wno-double-promotion")
 #}
 endmacro()
 
